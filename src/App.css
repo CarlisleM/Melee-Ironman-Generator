@@ -2,6 +2,21 @@
 	text-align: center;
 }
 
+.Options {
+	float: left;
+	width: 20%;
+	height: 100vh;
+	border-right: solid;
+}
+
+.Rosters {
+	margin-left: 20%;
+	width: 80%;
+}
+
+.GenerateRoster {
+}
+
 .show {
 	display: block;
 }
@@ -11,6 +26,7 @@
 }
 
 .CharacterButton {
+	position: relative;
 	/* position: absolute; */
 }
 
@@ -18,8 +34,6 @@
 	display: inline-block;
 	width: 150px;
 	height: 125px;
-	/* padding: 0px; */
-	padding-bottom: 15px;
 }
 
 .CharacterPortrait {
@@ -30,5 +44,11 @@
 	width: 100px;
 	height: 100px;
 	position: absolute;
-	z-index: 1;
+	top: 7px;
+	left: 20px;
+}
+
+.rosterSizeSelection {
+	width: 100%;
+	margin: auto;
 }

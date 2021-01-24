@@ -1,6 +1,6 @@
 import Bowser from './images/icons/bowser.png'
-import CaptainFalcon from './images/icons/cfalcon.png'
-import DonkeyKong from './images/icons/dk.png'
+import CaptainFalcon from './images/icons/captainfalcon.png'
+import DonkeyKong from './images/icons/donkeykong.png'
 import DrMario from './images/icons/drmario.png'
 import Falco from './images/icons/falco.png'
 import Fox from './images/icons/fox.png'
@@ -26,30 +26,30 @@ import Zelda from './images/icons/zelda.png'
 import Sheik from './images/icons/sheik.png'
 
 export default [
-    Bowser,
-    CaptainFalcon,
-    DonkeyKong,
-    DrMario,
-    Falco,
-    Fox,
-    Gameandwatch,
-    Ganon,
-    Iceclimbers,
-    Jigglypuff,
-    Kirby,
-    Link,
-    Luigi,
-    Mario,
-    Marth, 
-    Mewtwo,
-    Ness,
-    Peach,
-    Pichu,
-    Pikachu,
-    Roy,
-    Samus,
-    Ylink,
-    Yoshi,
-    Zelda,
-    Sheik
-];
+	Bowser,
+	CaptainFalcon,
+	DonkeyKong,
+	DrMario,
+	Falco,
+	Fox,
+	Gameandwatch,
+	Ganon,
+	Iceclimbers,
+	Jigglypuff,
+	Kirby,
+	Link,
+	Luigi,
+	Mario,
+	Marth,
+	Mewtwo,
+	Ness,
+	Peach,
+	Pichu,
+	Pikachu,
+	Roy,
+	Samus,
+	Ylink,
+	Yoshi,
+	Zelda,
+	Sheik,
+]
