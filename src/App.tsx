@@ -18,8 +18,9 @@ type AppState = {
 	playerOneChars: string[]
 	playerTwoChars: string[]
 	gameStatus: string
-	rosterSize: number
+	charRoster: { value: string; label: string }[]
 	bannedChars: string[]
+	rosterSize: number
 }
 
 // Game status
@@ -88,8 +89,6 @@ const charList = [
 	{ value: 'sheik', label: 'Sheik' },
 ]
 
-var filters: string[] = []
-
 class App extends React.Component<AppProps, AppState> {
 	constructor(props) {
 		super(props)
@@ -98,10 +97,9 @@ class App extends React.Component<AppProps, AppState> {
 			playerOneChars: charIconsP1,
 			playerTwoChars: charIconsP2,
 			gameStatus: STATES.IDLE,
-			rosterSize: 26,
+			charRoster: charList,
 			bannedChars: [],
-			// playerOneBannedChars: [],
-			// playerTwoBannedChars: []
+			rosterSize: 26,
 		}
 	}
 
@@ -138,49 +136,39 @@ class App extends React.Component<AppProps, AppState> {
 		// Reset all characters here to false maybe
 	}
 
+	// Messed up links for these 3
+	// Falco
+	// Game and watch
+	// Yoshi
+	// Fix falcon name
+
 	// Ban certain characters from appearing in the roster
 	banCharacter = (event) => {
 		this.setState({ rosterSize: this.state.rosterSize - 1 }) // Minus one from  roster size
 		this.state.bannedChars.push(event.value)
-		// Remove it from the current pool of characters
-
-		// Messed up links for these 3
-		// Falco
-		// Game and watch
-		// Yoshi
-
-		// Fix falcon name
-
-		// charIconsP1.forEach((element, index) => {
-		// 	if (element.includes(event.value.toLowerCase())) {
-		// 		console.log(
-		// 			'Removing: ' + event.value.toLowerCase() + ' at index: ' + index
-		// 		)
-		// 		// charIconsP1.splice(index, 1)
-		// 		// charIconsP1.splice(index, 1)
-		// 	}
-		// })
-
-		filters.push(event.value.toLowerCase())
-
-		const filteredResults = charIconsP1.filter((banned) =>
-			filters.every((val) => !banned.includes(val))
-		)
 
 		this.setState({
-			rosterSize: event.value,
-			playerOneChars: filteredResults,
+			playerOneChars: charIconsP1.filter((banned) =>
+				this.state.bannedChars.every((val) => !banned.includes(val))
+			),
+			charRoster: charList.filter((banned) =>
+				this.state.bannedChars.every((val) => !banned.value.includes(val))
+			),
 		})
-
-		// console.log(filteredResults)
 	}
 
 	setRosterSize = (event) => {
-		this.setState({
-			rosterSize: event.value,
-			playerOneChars: charIconsP1.slice(0, event.value),
-			playerTwoChars: charIconsP2.slice(0, event.value),
-		})
+		if (event.value <= 26 - this.state.bannedChars.length) {
+			this.setState({
+				rosterSize: event.value,
+				playerOneChars: charIconsP1.slice(0, event.value),
+				playerTwoChars: charIconsP2.slice(0, event.value),
+			})
+		} else {
+			// Impossible roster size given the current number of banned characters
+
+			console.log('Error out here')
+		}
 	}
 
 	render() {
@@ -191,13 +179,13 @@ class App extends React.Component<AppProps, AppState> {
 						className='rosterSizeSelection'
 						options={rosterLimit}
 						onChange={this.setRosterSize}
-						value={rosterLimit[25]}
+						value={this.state.rosterSize.toString()}
 						placeholder='Select an option'
 					/>
 
 					<Dropdown
 						className='charList'
-						options={charList}
+						options={this.state.charRoster}
 						onChange={this.banCharacter}
 						value={''}
 						placeholder='Select ban char'

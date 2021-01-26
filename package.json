@@ -16,6 +16,7 @@
     "react-dropdown": "^1.9.1",
     "react-native": "^0.63.4",
     "react-scripts": "4.0.1",
+    "reactstrap": "^8.9.0",
     "require": "^2.4.20",
     "require-context": "^1.1.0",
     "typescript": "^4.1.3",
