@@ -1,5 +1,6 @@
 .App {
 	text-align: center;
+	background-color: black;
 }
 
 .Options {
@@ -7,6 +8,7 @@
 	width: 20%;
 	height: 100vh;
 	border-right: solid;
+	border-color: white;
 }
 
 .Rosters {

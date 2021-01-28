@@ -32,35 +32,11 @@ const STATES = {
 	COMPLETE: 'complete',
 }
 
-// See if there is a better way to code this
-const rosterLimit = [
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'10',
-	'11',
-	'12',
-	'13',
-	'14',
-	'15',
-	'16',
-	'17',
-	'18',
-	'19',
-	'20',
-	'21',
-	'22',
-	'23',
-	'24',
-	'25',
-	'26',
-]
+var rosterLimit: string[] = [];
+
+for (var i = 1; i < 27; i++) {
+    rosterLimit.push(String(i));
+}
 
 const charList = [
 	{ value: 'bowser', label: 'Bowser' },
@@ -226,9 +202,19 @@ class App extends React.Component<AppProps, AppState> {
 		return (
 			<div className='App'>
 				<div className='Options'>
+					<div className='GenerateRoster'>
+						<GenerateRoster
+							changeRoster={this.shuffleRosters.bind(
+								this,
+								charIconsP1,
+								this.state.playerTwoChars
+							)}
+						/>
+					</div>
+
 					<Dropdown
 						className='rosterSizeSelection'
-						options={rosterLimit}
+						options= {rosterLimit}
 						onChange={this.setRosterSize}
 						value={this.state.rosterSize.toString()}
 						placeholder='Select an option'
@@ -241,16 +227,6 @@ class App extends React.Component<AppProps, AppState> {
 						value={''}
 						placeholder='Select ban char'
 					/>
-
-					<div className='GenerateRoster'>
-						<GenerateRoster
-							changeRoster={this.shuffleRosters.bind(
-								this,
-								charIconsP1,
-								this.state.playerTwoChars
-							)}
-						/>
-					</div>
 
 					<div>
 						{Object.keys(this.state.bannedChars).map((txt) => (
