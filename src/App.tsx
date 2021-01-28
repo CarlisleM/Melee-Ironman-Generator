@@ -7,20 +7,22 @@ import charIconsP2 from './iconsP2'
 import GenerateRoster from './RandomiseRoster'
 
 import CharacterIcon from './CharacterIcon'
-import PlayerRosterTest from './PlayerRoster'
+import PlayerRoster from './PlayerRoster'
 
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
+import { DebugInstructions } from 'react-native/Libraries/NewAppScreen'
+import { debug } from 'console'
 
 type AppProps = {}
 
 type AppState = {
 	playerOneChars: string[]
 	playerTwoChars: string[]
-	gameStatus: string
 	charRoster: { value: string; label: string }[]
 	bannedChars: string[]
 	rosterSize: number
+	gameStatus: string
 }
 
 // Game status
@@ -96,14 +98,14 @@ class App extends React.Component<AppProps, AppState> {
 		this.state = {
 			playerOneChars: charIconsP1,
 			playerTwoChars: charIconsP2,
-			gameStatus: STATES.IDLE,
 			charRoster: charList,
 			bannedChars: [],
 			rosterSize: 26,
+			gameStatus: STATES.IDLE,
 		}
 	}
 
-	shuffleRoster(roster) {
+	shuffle(roster) {
 		var currentIndex = roster.length,
 			temporaryValue,
 			randomIndex
@@ -119,20 +121,20 @@ class App extends React.Component<AppProps, AppState> {
 		return roster
 	}
 
-	shuffleRosters(roster) {
-		console.log(this.state.playerOneChars)
+	shuffleRosters(rosterP1, rosterP2) {
+		console.log(rosterP1)
 		this.setState({
-			playerOneChars: this.shuffleRoster(charIconsP1).slice(
-				0,
-				this.state.rosterSize
-			),
-			playerTwoChars: this.shuffleRoster(charIconsP2).slice(
-				0,
-				this.state.rosterSize
-			),
+			playerOneChars: this.shuffle(rosterP1)
+				.filter((banned) =>
+					this.state.bannedChars.every((val) => !banned.includes(val))
+				)
+				.slice(0, this.state.rosterSize),
+			playerTwoChars: this.shuffle(rosterP2)
+				.filter((banned) =>
+					this.state.bannedChars.every((val) => !banned.includes(val))
+				)
+				.slice(0, this.state.rosterSize),
 		})
-		console.log(this.state.playerOneChars)
-
 		// Reset all characters here to false maybe
 	}
 
@@ -144,30 +146,79 @@ class App extends React.Component<AppProps, AppState> {
 
 	// Ban certain characters from appearing in the roster
 	banCharacter = (event) => {
-		this.setState({ rosterSize: this.state.rosterSize - 1 }) // Minus one from  roster size
+		// Banning link bans both ylink and link
+
+		// This is never entered
+		if (this.state.rosterSize > 26 - this.state.bannedChars.length) {
+			console.log('actually entered this thing')
+			this.setState({ rosterSize: this.state.rosterSize - 1 }) // Minus one from  roster size
+		}
+
 		this.state.bannedChars.push(event.value)
 
 		this.setState({
-			playerOneChars: charIconsP1.filter((banned) =>
-				this.state.bannedChars.every((val) => !banned.includes(val))
-			),
+			playerOneChars: charIconsP1
+				.filter((banned) =>
+					this.state.bannedChars.every((val) => !banned.includes(val))
+				)
+				.slice(0, this.state.rosterSize),
+			playerTwoChars: charIconsP2
+				.filter((banned) =>
+					this.state.bannedChars.every((val) => !banned.includes(val))
+				)
+				.slice(0, this.state.rosterSize),
 			charRoster: charList.filter((banned) =>
 				this.state.bannedChars.every((val) => !banned.value.includes(val))
 			),
 		})
 	}
 
+	unbanChar = (text) => {
+		// Remove from banned list
+
+		var num
+
+		this.state.bannedChars.forEach((element, idx) => {
+			if (element.includes(text)) {
+				console.log('found a match: ' + element)
+				num = idx
+			}
+		})
+
+		this.setState({
+			charRoster: charList.filter((banned) =>
+				this.state.bannedChars.every(
+					(val) =>
+						!banned.value.includes(val) ||
+						banned.value.includes(this.state.bannedChars[num])
+				)
+			),
+		})
+
+		if (num != null) {
+			this.state.bannedChars.splice(num, 1)
+		}
+	}
+
 	setRosterSize = (event) => {
 		if (event.value <= 26 - this.state.bannedChars.length) {
+			console.log(charIconsP1)
 			this.setState({
 				rosterSize: event.value,
-				playerOneChars: charIconsP1.slice(0, event.value),
+				// charIconsP1 should be this.state.playerOneChars, this makes banned chars not appear when randomised, but causes the roster to not be able to be made bigger
+
+				playerOneChars: charIconsP1
+					.filter((banned) =>
+						this.state.bannedChars.every((val) => !banned.includes(val))
+					)
+					.slice(0, event.value),
+
 				playerTwoChars: charIconsP2.slice(0, event.value),
 			})
 		} else {
-			// Impossible roster size given the current number of banned characters
-
-			console.log('Error out here')
+			alert(
+				'Impossible roster size given the current number of banned characters'
+			)
 		}
 	}
 
@@ -192,29 +243,33 @@ class App extends React.Component<AppProps, AppState> {
 					/>
 
 					<div className='GenerateRoster'>
-						<GenerateRoster changeRoster={this.shuffleRosters.bind(this)} />
+						<GenerateRoster
+							changeRoster={this.shuffleRosters.bind(
+								this,
+								charIconsP1,
+								this.state.playerTwoChars
+							)}
+						/>
 					</div>
 
 					<div>
-						{/* <p>{this.state.bannedChars}</p> */}
 						{Object.keys(this.state.bannedChars).map((txt) => (
-							<p>{this.state.bannedChars[txt]}</p>
+							<p onClick={() => this.unbanChar(this.state.bannedChars[txt])}>
+								{this.state.bannedChars[txt]}
+							</p>
 						))}
-						{/* {this.state.bannedChars.map((txt) => (
-							<p>{txt}</p>
-						))} */}
 					</div>
 				</div>
 
 				<div className='Rosters'>
 					<h1>Player 1</h1>
-					<PlayerRosterTest
+					<PlayerRoster
 						rosterSize={this.state.rosterSize}
 						charIcons={this.state.playerOneChars}
 						playerNumber={1}
 					/>
 					<h1>Player 2</h1>
-					<PlayerRosterTest
+					<PlayerRoster
 						rosterSize={this.state.rosterSize}
 						charIcons={this.state.playerTwoChars}
 						playerNumber={2}
