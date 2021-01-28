@@ -32,17 +32,18 @@ const STATES = {
 	COMPLETE: 'complete',
 }
 
-var rosterLimit: string[] = [];
+// Set roster size options
+var rosterLimit: string[] = []
 
 for (var i = 1; i < 27; i++) {
-    rosterLimit.push(String(i));
+	rosterLimit.push(String(i))
 }
 
 const charList = [
 	{ value: 'bowser', label: 'Bowser' },
-	{ value: 'captainFalcon', label: 'Captain Falcon' },
-	{ value: 'donkeyKong', label: 'Donkey Kong' },
-	{ value: 'dMario', label: 'Dr Mario' },
+	{ value: 'captainfalcon', label: 'Captain Falcon' },
+	{ value: 'donkeykong', label: 'Donkey Kong' },
+	{ value: 'drmario', label: 'Dr Mario' },
 	{ value: 'falco', label: 'Falco' },
 	{ value: 'fox', label: 'Fox' },
 	{ value: 'gameandwatch', label: 'Game & Watch' },
@@ -118,7 +119,6 @@ class App extends React.Component<AppProps, AppState> {
 	// Falco
 	// Game and watch
 	// Yoshi
-	// Fix falcon name
 
 	// Ban certain characters from appearing in the roster
 	banCharacter = (event) => {
@@ -214,7 +214,7 @@ class App extends React.Component<AppProps, AppState> {
 
 					<Dropdown
 						className='rosterSizeSelection'
-						options= {rosterLimit}
+						options={rosterLimit}
 						onChange={this.setRosterSize}
 						value={this.state.rosterSize.toString()}
 						placeholder='Select an option'
