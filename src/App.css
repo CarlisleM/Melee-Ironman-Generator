@@ -3,6 +3,10 @@
 	background-color: black;
 }
 
+h1 {
+	color: white;
+}
+
 .Options {
 	float: left;
 	width: 20%;
@@ -11,9 +15,14 @@
 	border-color: white;
 }
 
+.ChooseMatchRosters {
+	color: white;
+}
+
 .Rosters {
-	margin-left: 20%;
+	height: 100vh;
 	width: 80%;
+	margin-left: 20%;
 }
 
 .GenerateRoster {
@@ -53,4 +62,8 @@
 .rosterSizeSelection {
 	width: 100%;
 	margin: auto;
+}
+
+.banList {
+	color: white;
 }
