@@ -1,18 +1,16 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react'
 import './App.css'
 import charIconsP1 from './iconsP1'
 import charIconsP2 from './iconsP2'
 
 import GenerateRoster from './RandomiseRoster'
 
-import CharacterIcon from './CharacterIcon'
 import PlayerRoster from './PlayerRoster'
 
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
-import { DebugInstructions } from 'react-native/Libraries/NewAppScreen'
-import { debug } from 'console'
+
+import bfbg from './images/bfbg.jpg'
 
 type AppProps = {}
 
@@ -110,45 +108,47 @@ class App extends React.Component<AppProps, AppState> {
 				return arr2.indexOf(el.split('/')[3].split('.')[0]) === -1
 			}
 		})
-		console.log(filtered)
 		return filtered
 	}
 
 	shuffleRosters(rosterP1, rosterP2) {
-		this.setState({
-			playerOneChars: this.shuffle(
-				this.filterArray(rosterP1, this.state.bannedChars)
-			).slice(0, this.state.rosterSize),
-			playerTwoChars: this.shuffle(
-				this.filterArray(rosterP2, this.state.bannedChars)
-			).slice(0, this.state.rosterSize),
-		})
+		if (this.state.rosterOptions == 'random-rosters') {
+			this.setState({
+				playerOneChars: this.shuffle(
+					this.filterArray(rosterP1, this.state.bannedChars)
+				).slice(0, this.state.rosterSize),
+				playerTwoChars: this.shuffle(
+					this.filterArray(rosterP2, this.state.bannedChars)
+				).slice(0, this.state.rosterSize),
+			})
+		} else {
+			var charRandom = this.shuffle(charIconsP1)
+			this.setState({
+				playerOneChars: this.shuffle(
+					this.filterArray(charRandom, this.state.bannedChars).slice(
+						0,
+						this.state.rosterSize
+					)
+				),
+				playerTwoChars: this.shuffle(
+					this.filterArray(charRandom, this.state.bannedChars).slice(
+						0,
+						this.state.rosterSize
+					)
+				),
+			})
+		}
 		// Reset all characters here to false maybe
 	}
 
-	// Messed up links for these 3
-	// Falco
-	// Game and watch
-	// Yoshi
-
 	// Ban certain characters from appearing in the roster
 	banCharacter = (event) => {
-		// Banning link bans both ylink and link
-
-		// This is never entered
+		// This is never entered, check what this actually does
 		if (this.state.rosterSize > 26 - this.state.bannedChars.length) {
-			console.log('actually entered this thing')
 			this.setState({ rosterSize: this.state.rosterSize - 1 }) // Minus one from  roster size
 		}
 
 		this.state.bannedChars.push(event.value)
-
-		// This gives us just the character name  in lowercase no spaces
-		// charIconsP1.forEach((element) =>
-		// 	console.log(element.split('/')[3].split('.')[0])
-		// )
-
-		// banned = the character path
 
 		this.setState({
 			playerOneChars: this.filterArray(
@@ -167,7 +167,6 @@ class App extends React.Component<AppProps, AppState> {
 		var num
 		this.state.bannedChars.forEach((element, idx) => {
 			if (element.includes(text)) {
-				console.log('found a match: ' + element)
 				num = idx
 			}
 		})
@@ -224,8 +223,17 @@ class App extends React.Component<AppProps, AppState> {
 
 	render() {
 		return (
-			<div className='App'>
+			<div
+				className='App'
+				style={{
+					backgroundImage: 'url(' + bfbg + ')',
+					backgroundRepeat: 'no-repeat',
+					backgroundPosition: 'center',
+					backgroundSize: 'cover',
+				}}
+			>
 				<div className='Options'>
+					<h1>Options</h1>
 					<div className='GenerateRoster'>
 						<GenerateRoster
 							changeRoster={this.shuffleRosters.bind(
@@ -235,33 +243,39 @@ class App extends React.Component<AppProps, AppState> {
 							)}
 						/>
 					</div>
-
 					<div className='ChooseMatchRosters'>
-						<input
-							type='radio'
-							value='match-rosters'
-							name='roster'
-							checked={this.state.rosterOptions === 'match-rosters'}
-							onChange={this.onValueChange}
-						/>
-						Same Chars
-						<input
-							type='radio'
-							value='random-rosters'
-							name='roster'
-							checked={this.state.rosterOptions === 'random-rosters'}
-							onChange={this.onValueChange}
-						/>{' '}
-						Random Chars
+						<div className='radio-button'>
+							<input
+								type='radio'
+								value='match-rosters'
+								name='roster'
+								checked={this.state.rosterOptions === 'match-rosters'}
+								onChange={this.onValueChange}
+							/>{' '}
+							Same Chars
+						</div>
+						<div className='radio-button'>
+							<input
+								type='radio'
+								value='random-rosters'
+								name='roster'
+								checked={this.state.rosterOptions === 'random-rosters'}
+								onChange={this.onValueChange}
+							/>{' '}
+							Random Chars
+						</div>
 					</div>
 
-					<Dropdown
-						className='rosterSizeSelection'
-						options={rosterLimit}
-						onChange={this.setRosterSize}
-						value={this.state.rosterSize.toString()}
-						placeholder='Select an option'
-					/>
+					<div className='roster-size'>
+						Roster Size:
+						<Dropdown
+							className='rosterSizeSelection'
+							options={rosterLimit}
+							onChange={this.setRosterSize}
+							value={this.state.rosterSize.toString()}
+							placeholder='Select an option'
+						/>
+					</div>
 
 					<Dropdown
 						className='charList'
@@ -270,8 +284,8 @@ class App extends React.Component<AppProps, AppState> {
 						value={''}
 						placeholder='Select ban char'
 					/>
-
 					<div className='banList'>
+						<h1>Banned</h1>
 						{Object.keys(this.state.bannedChars).map((txt) => (
 							<p onClick={() => this.unbanChar(this.state.bannedChars[txt])}>
 								{this.state.bannedChars[txt]}

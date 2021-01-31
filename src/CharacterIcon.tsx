@@ -1,6 +1,4 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import { Image } from 'react-native'
+import React from 'react'
 import redcross from './images/x.png'
 
 type AppProps = {

@@ -1,7 +1,5 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react'
 import CharacterIcon from './CharacterIcon'
-// import charIconsP1 from './iconsP1'
 
 interface AppProps {
 	charIcons: any

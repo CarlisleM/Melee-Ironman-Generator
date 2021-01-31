@@ -15,6 +15,11 @@ h1 {
 	border-color: white;
 }
 
+.radio-button {
+	padding: 5px;
+	display: inline-block;
+}
+
 .ChooseMatchRosters {
 	color: white;
 }
@@ -26,6 +31,7 @@ h1 {
 }
 
 .GenerateRoster {
+	padding-top: 10px;
 }
 
 .show {
@@ -61,9 +67,19 @@ h1 {
 
 .rosterSizeSelection {
 	width: 100%;
-	margin: auto;
+}
+
+.roster-size {
+	color: white;
+	display: inline-flex;
+	padding: 5px;
 }
 
 .banList {
+	font-size: 24px;
 	color: white;
+}
+
+h1 {
+	text-decoration: underline;
 }
