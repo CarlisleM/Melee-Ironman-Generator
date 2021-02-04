@@ -1,4 +1,4 @@
-.App {
+.app {
 	text-align: center;
 	background-color: black;
 }
@@ -7,7 +7,7 @@ h1 {
 	color: white;
 }
 
-.Options {
+.options {
 	float: left;
 	width: 20%;
 	height: 100vh;
@@ -20,18 +20,16 @@ h1 {
 	display: inline-block;
 }
 
-.ChooseMatchRosters {
-	color: white;
-}
-
-.Rosters {
+.rosters {
 	height: 100vh;
 	width: 80%;
 	margin-left: 20%;
 }
 
-.GenerateRoster {
+.generate-roster {
 	padding-top: 10px;
+	width: 90%;
+	margin: auto;
 }
 
 .show {
@@ -42,22 +40,22 @@ h1 {
 	display: none;
 }
 
-.CharacterButton {
+.character-button {
 	position: relative;
 	/* position: absolute; */
 }
 
-.PlayerRoster {
+.player-roster {
 	display: inline-block;
 	width: 150px;
 	height: 125px;
 }
 
-.CharacterPortrait {
+.character-portrait {
 	position: relative;
 }
 
-.MarkComplete {
+.mark-complete {
 	width: 100px;
 	height: 100px;
 	position: absolute;
@@ -65,19 +63,40 @@ h1 {
 	left: 20px;
 }
 
-.rosterSizeSelection {
-	width: 100%;
+.choose-match-rosters {
+	padding: 10px 0 0 0;
+	color: white;
 }
 
 .roster-size {
 	color: white;
-	display: inline-flex;
-	padding: 5px;
+	width: 100%;
+	padding: 0 0 10px 0;
 }
 
-.banList {
+.roster-dropdowns {
+	width: 100%;
+	margin: auto;
+	padding: 10px 0 35px 0;
+}
+
+.roster-size-selection {
+	width: 50%;
+	float: left;
+}
+
+.ban-list-dropdown {
+	width: 50%;
+	float: right;
+}
+
+.ban-list {
 	font-size: 24px;
 	color: white;
+}
+
+.banned-character {
+	cursor: pointer;
 }
 
 h1 {

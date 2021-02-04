@@ -22,7 +22,7 @@ export default class PlayerRoster extends React.Component<AppProps> {
 		return (
 			<div className=''>
 				{Object.keys(this.props.charIcons).map((characterIcon, idx) => (
-					<div className='PlayerRoster'>
+					<div className='player-roster'>
 						{this.renderIcons(idx, this.props.charIcons[idx])}
 						{/* This is weird, characterIcon should give the same as charIconsP1[idx] */}
 					</div>

@@ -2,14 +2,10 @@ import React from 'react'
 import './App.css'
 import charIconsP1 from './iconsP1'
 import charIconsP2 from './iconsP2'
-
 import GenerateRoster from './RandomiseRoster'
-
 import PlayerRoster from './PlayerRoster'
-
-import Dropdown from 'react-dropdown'
+import Dropdown from 'react-bootstrap/Dropdown'
 import 'react-dropdown/style.css'
-
 import bfbg from './images/bfbg.jpg'
 
 type AppProps = {}
@@ -21,7 +17,8 @@ type AppState = {
 	bannedChars: string[]
 	rosterSize: number
 	gameStatus: string
-	rosterOptions: string
+	rosterCharacterOptions: string
+	rosterOrderOptions: string
 }
 
 // Game status
@@ -67,7 +64,7 @@ const charList = [
 	{ value: 'sheik', label: 'Sheik' },
 ]
 
-// If roster size smaller than 26, and less bans than roster size - bans, add radio button option for wether players want to force their rosters to be the same characters or use different (randomised)
+// If charsCompleteP1 or charsCompleteP2 > 0, disable generate roster button. Set game state to 'in progress'
 
 class App extends React.Component<AppProps, AppState> {
 	constructor(props) {
@@ -80,7 +77,8 @@ class App extends React.Component<AppProps, AppState> {
 			bannedChars: [],
 			rosterSize: 26,
 			gameStatus: STATES.IDLE,
-			rosterOptions: 'random-rosters',
+			rosterCharacterOptions: 'match-rosters',
+			rosterOrderOptions: 'same-order-rosters',
 		}
 	}
 
@@ -112,7 +110,7 @@ class App extends React.Component<AppProps, AppState> {
 	}
 
 	shuffleRosters(rosterP1, rosterP2) {
-		if (this.state.rosterOptions == 'random-rosters') {
+		if (this.state.rosterCharacterOptions == 'random-rosters') {
 			this.setState({
 				playerOneChars: this.shuffle(
 					this.filterArray(rosterP1, this.state.bannedChars)
@@ -148,7 +146,7 @@ class App extends React.Component<AppProps, AppState> {
 			this.setState({ rosterSize: this.state.rosterSize - 1 }) // Minus one from  roster size
 		}
 
-		this.state.bannedChars.push(event.value)
+		this.state.bannedChars.push(event)
 
 		this.setState({
 			playerOneChars: this.filterArray(
@@ -187,17 +185,20 @@ class App extends React.Component<AppProps, AppState> {
 	}
 
 	setRosterSize = (event) => {
-		if (event.value <= 26 - this.state.bannedChars.length) {
+		if (event <= 26 - this.state.bannedChars.length) {
 			this.setState({
-				rosterSize: event.value,
+				rosterSize: event,
 				// charIconsP1 should be this.state.playerOneChars, this makes banned chars not appear when randomised, but causes the roster to not be able to be made bigger
 
+				// No need to shuffle here, roster should not change at all, only the size should change
+				// Currently removing the shuffle does not solve the issue
+				// Without shuffle it sets the roster to the default roster
 				playerOneChars: this.shuffle(
 					charIconsP1
 						.filter((banned) =>
 							this.state.bannedChars.every((val) => !banned.includes(val))
 						)
-						.slice(0, event.value)
+						.slice(0, event)
 				),
 
 				playerTwoChars: this.shuffle(
@@ -205,7 +206,7 @@ class App extends React.Component<AppProps, AppState> {
 						.filter((banned) =>
 							this.state.bannedChars.every((val) => !banned.includes(val))
 						)
-						.slice(0, event.value)
+						.slice(0, event)
 				),
 			})
 		} else {
@@ -217,14 +218,20 @@ class App extends React.Component<AppProps, AppState> {
 
 	onValueChange = (event) => {
 		this.setState({
-			rosterOptions: event.target.value,
+			rosterCharacterOptions: event.target.value,
+		})
+	}
+
+	onOrderChange = (event) => {
+		this.setState({
+			rosterOrderOptions: event.target.value,
 		})
 	}
 
 	render() {
 		return (
 			<div
-				className='App'
+				className='app'
 				style={{
 					backgroundImage: 'url(' + bfbg + ')',
 					backgroundRepeat: 'no-repeat',
@@ -232,9 +239,9 @@ class App extends React.Component<AppProps, AppState> {
 					backgroundSize: 'cover',
 				}}
 			>
-				<div className='Options'>
+				<div className='options'>
 					<h1>Options</h1>
-					<div className='GenerateRoster'>
+					<div className='generate-roster'>
 						<GenerateRoster
 							changeRoster={this.shuffleRosters.bind(
 								this,
@@ -243,13 +250,13 @@ class App extends React.Component<AppProps, AppState> {
 							)}
 						/>
 					</div>
-					<div className='ChooseMatchRosters'>
+					<div className='choose-match-rosters'>
 						<div className='radio-button'>
 							<input
 								type='radio'
 								value='match-rosters'
 								name='roster'
-								checked={this.state.rosterOptions === 'match-rosters'}
+								checked={this.state.rosterCharacterOptions === 'match-rosters'}
 								onChange={this.onValueChange}
 							/>{' '}
 							Same Chars
@@ -259,42 +266,110 @@ class App extends React.Component<AppProps, AppState> {
 								type='radio'
 								value='random-rosters'
 								name='roster'
-								checked={this.state.rosterOptions === 'random-rosters'}
+								checked={this.state.rosterCharacterOptions === 'random-rosters'}
 								onChange={this.onValueChange}
 							/>{' '}
 							Random Chars
 						</div>
 					</div>
 
-					<div className='roster-size'>
-						Roster Size:
-						<Dropdown
-							className='rosterSizeSelection'
-							options={rosterLimit}
-							onChange={this.setRosterSize}
-							value={this.state.rosterSize.toString()}
-							placeholder='Select an option'
-						/>
+					<div className='choose-match-rosters'>
+						<div className='radio-button'>
+							<input
+								type='radio'
+								value='same-order-rosters'
+								name='roster-order'
+								checked={this.state.rosterOrderOptions === 'same-order-rosters'}
+								onChange={this.onOrderChange}
+							/>{' '}
+							Same Order
+						</div>
+						<div className='radio-button'>
+							<input
+								type='radio'
+								value='random-order-rosters'
+								name='roster-order'
+								checked={
+									this.state.rosterOrderOptions === 'random-order-rosters'
+								}
+								onChange={this.onOrderChange}
+							/>{' '}
+							Random Order
+						</div>
+						<div className='radio-button'>
+							<input
+								type='radio'
+								value='reverse-order-rosters'
+								name='roster-order'
+								checked={
+									this.state.rosterOrderOptions === 'reverse-order-rosters'
+								}
+								onChange={this.onOrderChange}
+							/>{' '}
+							Reverse Order
+						</div>
 					</div>
 
-					<Dropdown
-						className='charList'
-						options={this.state.charRoster}
-						onChange={this.banCharacter}
-						value={''}
-						placeholder='Select ban char'
-					/>
-					<div className='banList'>
+					<div className='roster-size'>
+						<div className='roster-dropdowns'>
+							<Dropdown
+								className='roster-size-selection'
+								placeholder='Select roster size'
+								onSelect={this.setRosterSize}
+							>
+								<Dropdown.Toggle
+									style={{ width: '80%' }}
+									variant='success'
+									id='dropdown-basic'
+								>
+									Roster Size: {this.state.rosterSize}
+								</Dropdown.Toggle>
+
+								<Dropdown.Menu>
+									{rosterLimit.map((size) => (
+										<Dropdown.Item eventKey={size} value={size}>
+											{size}
+										</Dropdown.Item>
+									))}
+								</Dropdown.Menu>
+							</Dropdown>
+							<Dropdown
+								className='ban-list-dropdown'
+								placeholder='Select ban char'
+								onSelect={this.banCharacter}
+							>
+								<Dropdown.Toggle
+									style={{ width: '80%' }}
+									variant='success'
+									id='dropdown-basic'
+								>
+									Select Ban
+								</Dropdown.Toggle>
+								<Dropdown.Menu>
+									{this.state.charRoster.map((item) => (
+										<Dropdown.Item eventKey={item.value}>
+											{item.label}
+										</Dropdown.Item>
+									))}
+								</Dropdown.Menu>
+							</Dropdown>
+						</div>
+					</div>
+
+					<div className='ban-list'>
 						<h1>Banned</h1>
 						{Object.keys(this.state.bannedChars).map((txt) => (
-							<p onClick={() => this.unbanChar(this.state.bannedChars[txt])}>
+							<p
+								className='banned-character'
+								onClick={() => this.unbanChar(this.state.bannedChars[txt])}
+							>
 								{this.state.bannedChars[txt]}
 							</p>
 						))}
 					</div>
 				</div>
 
-				<div className='Rosters'>
+				<div className='rosters'>
 					<h1>Player 1</h1>
 					<PlayerRoster
 						rosterSize={this.state.rosterSize}

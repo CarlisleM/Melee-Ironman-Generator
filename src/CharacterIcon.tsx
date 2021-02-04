@@ -60,14 +60,14 @@ export default class CharacterIcon extends React.Component<AppProps, AppState> {
 
 	render() {
 		return (
-			<button className='CharacterButton' onClick={() => this.handleClick()}>
+			<button className='character-button' onClick={() => this.handleClick()}>
 				<img
-					className='CharacterPortrait'
+					className='character-portrait'
 					src={this.props.characterPortrait}
 					alt='css-icon'
 				/>
 				<div className={this.state.isComplete ? 'show' : 'hide'}>
-					<img className='MarkComplete' src={redcross} alt='complete' />
+					<img className='mark-complete' src={redcross} alt='complete' />
 				</div>
 			</button>
 		)
